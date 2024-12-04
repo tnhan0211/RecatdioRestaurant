@@ -32,25 +32,42 @@
 							
 													
 							<li class="nav-item">
-								<a href="orders.html" class="nav-link">
-									<i class="nav-icon fas fa-shopping-bag"></i>
-									<p>Orders</p>
+								<a href="{{ route('admin.bookings.index') }}" class="nav-link">
+									<i class="nav-icon fas fa-calendar-alt"></i>
+									<p>Đặt bàn</p>
 								</a>
 							</li>
 							<li class="nav-item">
-								<a href="discount.html" class="nav-link">
+								<a href="#" class="nav-link">
 									<i class="nav-icon  fa fa-percent" aria-hidden="true"></i>
 									<p>Discount</p>
 								</a>
 							</li>
 							<li class="nav-item">
-								<a href="users.html" class="nav-link">
-									<i class="nav-icon  fas fa-users"></i>
-									<p>Users</p>
+								<a href="#" class="nav-link">
+									<i class="nav-icon fas fa-users"></i>
+									<p>
+										Quản lý người dùng
+										<i class="right fas fa-angle-left"></i>
+									</p>
 								</a>
+								<ul class="nav nav-treeview">
+									<li class="nav-item">
+										<a href="{{ route('admin.users.index') }}" class="nav-link">
+											<i class="far fa-circle nav-icon"></i>
+											<p>Khách hàng</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="{{ route('admin.admins.index') }}" class="nav-link">
+											<i class="far fa-circle nav-icon"></i>
+											<p>Quản trị viên</p>
+										</a>
+									</li>
+								</ul>
 							</li>
 							<li class="nav-item">
-								<a href="pages.html" class="nav-link">
+								<a href="#" class="nav-link">
 									<i class="nav-icon  far fa-file-alt"></i>
 									<p>Pages</p>
 								</a>

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Order;
 
 
 
@@ -24,7 +25,8 @@ class User extends Authenticatable
         'phone_number',
         'provider',
         'provider_id',
-        'role'
+        'role',
+        'phone'
     ];
 
     /**
@@ -54,4 +56,9 @@ class User extends Authenticatable
     {
         return !empty($this->provider) && !empty($this->provider_id);
     }
+
+    public function bookings()
+{
+    return $this->hasMany(Booking::class);
+}
 }

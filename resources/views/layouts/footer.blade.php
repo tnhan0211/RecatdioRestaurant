@@ -26,7 +26,7 @@
                 <h5 class="text-light fw-normal">Thứ 2 - Thứ 7</h5>
                 <p>09:00 - 22:00</p>
                 <h5 class="text-light fw-normal">Chủ nhật</h5>
-                <p>10:00 - 23:00</p>
+                <p>09:00 - 23:00</p>
             </div>
             <div class="col-lg-3 col-md-6">
                 <h4 class="section-title ff-secondary text-start text-primary fw-normal mb-4">Đăng ký</h4>

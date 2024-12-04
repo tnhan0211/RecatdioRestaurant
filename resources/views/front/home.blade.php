@@ -83,7 +83,7 @@
                                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ Auth::user()->name }}</a>
                                 <div class="dropdown-menu m-0">
                                     <a href="{{ route('profile.edit') }}" class="dropdown-item">Thông tin cá nhân</a>
-                                    <a href="{{ route('orders.index') }}" class="dropdown-item">Lịch sử đặt bàn</a>
+                                    <a href="{{ route('bookings.index') }}" class="dropdown-item">Lịch sử đặt bàn</a>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
                                         <a href="{{ route('logout') }}" 
@@ -106,7 +106,7 @@
                         <div class="col-lg-6 text-center text-lg-start">
                             <h1 class="display-3 text-white animated slideInLeft">Thưởng thức<br>ẩm thực tuyệt vời</h1>
                             <p class="text-white animated slideInLeft mb-4 pb-2">Chúng tôi có những đầu bếp chất lượng cao, được đào tạo bài bản. Đảm bảo các món ăn đều ngon miệng, hấp dẫn mang hơi hướng ẩm thực Việt Nam hòa trộn với ẩm thực nước ngoài.</p>
-                            <a href="#" class="btn btn-primary py-sm-3 px-sm-5 me-3 animated slideInLeft">Đặt bàn</a>
+                            <a href="{{ route('front.booking') }}" class="btn btn-primary py-sm-3 px-sm-5 me-3 animated slideInLeft">Đặt bàn</a>
                         </div>
                         <div class="col-lg-6 text-center text-lg-end overflow-hidden">
                             <img class="img-fluid" src="{{ asset('front-assets/img/hero.png') }}" alt="">
@@ -237,19 +237,23 @@
                             <div class="row g-4">
                                 @foreach($category->menu->where('status', 1)->sortBy('position') as $item)
                                 <div class="col-lg-6">
-                                    <div class="d-flex align-items-center">
+                                    <div class="menu-item d-flex align-items-center">
                                         <div class="menu-img-container">
-                                            <img class="flex-shrink-0 img-fluid rounded menu-img" 
-                                                 src="{{ URL::to('/'.$item->image) }}"
-                                                 onerror="this.onerror=null; this.src='/uploads/menu/1732596610_cook.jpg';"
-                                                 alt="{{ $item->name }}">
+                                            <a href="{{ route('front.menu.detail', $item->id) }}" class="text-decoration-none">
+                                                <img class="flex-shrink-0 img-fluid rounded menu-img zoom-img" 
+                                                     src="{{ URL::to('/'.$item->image) }}"
+                                                     onerror="this.onerror=null; this.src='/uploads/menu/1732596610_cook.jpg';"
+                                                     alt="{{ $item->name }}">
+                                            </a>
                                         </div>
                                         <div class="w-100 d-flex flex-column text-start ps-4">
                                             <h5 class="d-flex justify-content-between border-bottom pb-2">
-                                                <span>{{ $item->name }}</span>
+                                                <a href="{{ route('front.menu.detail', $item->id) }}" class="text-dark text-decoration-none">
+                                                    <span>{{ $item->name }}</span>
+                                                </a>
                                                 <span class="text-primary">{{ number_format($item->price, 0, ',', '.') }} VNĐ</span>
                                             </h5>
-                                            <small class="fst-italic">{{ $item->description }}</small>
+                                            <small class="fst-italic">{{ Str::limit($item->description, 100) }}</small>
                                         </div>
                                     </div>
                                 </div>
@@ -263,84 +267,75 @@
         </div>
         <!-- Menu End -->
 
+        <style>
+            .menu-img-container {
+                width: 150px;
+                height: 150px;
+                overflow: hidden;
+                border-radius: 8px;
+                position: relative;
+            }
+
+            .menu-img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+                transition: transform 0.5s ease;
+            }
+
+            .menu-img.zoom-img:hover {
+                transform: scale(1.1);
+            }
+
+            .menu-item {
+                background: #fff;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 15px rgba(0,0,0,0.1);
+                transition: transform 0.3s ease;
+            }
+
+            .menu-item:hover {
+                transform: translateY(-5px);
+            }
+
+            .menu-item h5 {
+                margin-bottom: 10px;
+            }
+
+            .menu-item .text-primary {
+                font-weight: bold;
+            }
+
+            .menu-item small {
+                color: #666;
+                line-height: 1.6;
+            }
+        </style>
+
 
         <!-- Reservation Start -->
         <div class="container-xxl py-5 px-0 wow fadeInUp" data-wow-delay="0.1s">
             <div class="row g-0">
                 <div class="col-md-6">
                     <div class="video">
-                        <button type="button" class="btn-play" data-bs-toggle="modal" data-src="https://www.youtube.com/embed/DWRcNpR6Kdc" data-bs-target="#videoModal">
+                        <button type="button" class="btn-play" data-bs-toggle="modal" data-bs-target="#videoModal">
                             <span></span>
                         </button>
                     </div>
                 </div>
                 <div class="col-md-6 bg-dark d-flex align-items-center">
                     <div class="p-5 wow fadeInUp" data-wow-delay="0.2s">
-                        <h5 class="section-title ff-secondary text-start text-primary fw-normal">Reservation</h5>
-                        <h1 class="text-white mb-4">Book A Table Online</h1>
-                        <form>
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="name" placeholder="Your Name">
-                                        <label for="name">Your Name</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="email" class="form-control" id="email" placeholder="Your Email">
-                                        <label for="email">Your Email</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating date" id="date3" data-target-input="nearest">
-                                        <input type="text" class="form-control datetimepicker-input" id="datetime" placeholder="Date & Time" data-target="#date3" data-toggle="datetimepicker" />
-                                        <label for="datetime">Date & Time</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <select class="form-select" id="select1">
-                                            <option value="1">People 1</option>
-                                            <option value="2">People 2</option>
-                                            <option value="3">People 3</option>
-                                        </select>
-                                        <label for="select1">No Of People</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        <textarea class="form-control" placeholder="Special Request" id="message" style="height: 100px"></textarea>
-                                        <label for="message">Special Request</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <button class="btn btn-primary w-100 py-3" type="submit">Book Now</button>
-                                </div>
-                            </div>
-                        </form>
+                        <h5 class="section-title ff-secondary text-start text-primary fw-normal">Đặt Bàn</h5>
+                        <h1 class="text-white mb-4">Đặt Bàn Trực Tuyến</h1>
+                        <a href="{{ route('front.booking') }}" class="btn btn-primary w-100 py-3">Đặt Bàn Ngay</a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content rounded-0">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Youtube Video</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <!-- 16:9 aspect ratio -->
-                        <div class="ratio ratio-16x9">
-                            <iframe class="embed-responsive-item" src="" id="video" allowfullscreen allowscriptaccess="always"
-                                allow="autoplay"></iframe>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
         <!-- Reservation Start -->
 
 

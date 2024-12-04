@@ -50,7 +50,11 @@
                                 </div>
                                 <div class="w-100 d-flex flex-column text-start ps-4">
                                     <h5 class="d-flex justify-content-between border-bottom pb-2">
-                                        <span>{{ $item->name }}</span>
+                                        <span>
+                                            <a href="{{ route('front.menu.detail', $item->id) }}" class="text-dark text-decoration-none">
+                                                {{ $item->name }}
+                                            </a>
+                                        </span>
                                         <span class="text-primary">{{ number_format($item->price, 0, ',', '.') }} VNĐ</span>
                                     </h5>
                                     <small class="fst-italic">{{ $item->description }}</small>
